@@ -2,10 +2,8 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 
-//importing the blog file
-const Blog = require("./models/blogs");
-const { result } = require("lodash");
-const { render } = require("ejs");
+// importing the blogRoutes
+const blogRoutes = require("./routes/blogRoutes");
 
 // express app
 const app = express();
@@ -148,66 +146,8 @@ app.get("/about", (req, res) => {
 });
 
 // blog routes
-app.get("/blogs", (req, res) => {
-  // sort() function is used to sort the result. It takes in an object which tells the details about the sort
-  Blog.find()
-    .sort({ createdAt: -1 })
-    .then((result) => {
-      // since blogs are used in EJS the key for the value result should be blogs
-      res.render("index", { title: "All Blogs", blogs: result });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-// when we click the submit button we have to send the data ie POST
-app.post("/blogs", (req, res) => {
-  // req.body gives the data from the webform as objects which is then passed to the instance of Blog document
-  const blog = new Blog(req.body);
-
-  blog
-    .save()
-    .then((result) => {
-      res.redirect("/blogs");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-// route parameter
-app.get("/blogs/:id", (req, res) => {
-  // to get the id of each blog
-  const id = req.params.id;
-
-  Blog.findById(id)
-    .then((result) => {
-      res.render("details", { blog: result, title: "Blog Details" });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-// delete route
-app.delete("/blogs/:id", (req, res) => {
-  const id = req.params.id;
-
-  // when we use AJAX request we cannot do redirect but we have to give some json data back to browser which has the redirect property
-  // which will be in the frontend
-  Blog.findByIdAndDelete(id)
-    .then((result) => {
-      res.json({ redirect: "/blogs" });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-// create blog
-app.get("/blogs/create", (req, res) => {
-  res.render("create", { title: "Create a new Blog" });
-});
+// we can scope it to /blog so that we can remove /blog from every routes in blogRoutes
+app.use("/blogs", blogRoutes);
 
 // redirects
 // app.get("/about-us", (req, res) => {

@@ -162,3 +162,13 @@ Saves time, clean code executed
 
 - Route Parameters: The variable parts of the route that may change value
         ex: localhost:3000/blogs/:id here id is the variable
+
+** Expres Router
+ - We can use it to manage our routes more efficiently and tidily
+ - Splits our routes into different groups and makes code more modular
+
+** MVC
+ - stands for Model, View, Controller
+ - MVC is a way of structuring oru code and files
+ - Keeps code more modular, reusable and easier to read
+
