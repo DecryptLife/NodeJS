@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 //importing the blog file
 const Blog = require("./models/blogs");
 const { result } = require("lodash");
+const { render } = require("ejs");
 
 // express app
 const app = express();
@@ -175,6 +176,34 @@ app.post("/blogs", (req, res) => {
     });
 });
 
+// route parameter
+app.get("/blogs/:id", (req, res) => {
+  // to get the id of each blog
+  const id = req.params.id;
+
+  Blog.findById(id)
+    .then((result) => {
+      res.render("details", { blog: result, title: "Blog Details" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+// delete route
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+
+  // when we use AJAX request we cannot do redirect but we have to give some json data back to browser which has the redirect property
+  // which will be in the frontend
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/blogs" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 // create blog
 app.get("/blogs/create", (req, res) => {
   res.render("create", { title: "Create a new Blog" });

@@ -159,3 +159,6 @@ Saves time, clean code executed
         - POST requests to create new data (eg new blog)
         - DELETE requests to delete data (eg delete a blog)
         - PUT requests to updatte data
+
+- Route Parameters: The variable parts of the route that may change value
+        ex: localhost:3000/blogs/:id here id is the variable

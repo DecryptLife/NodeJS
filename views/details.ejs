@@ -1,0 +1,53 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="details content">
+      <h2><%= blog.title %></h2>
+      <div class="content">
+        <p><%= blog.body %></p>
+      </div>
+      <!-- data-doc is a custom attribute so we can collect the data when we click delete -->
+      <a class="delete" data-doc="<%= blog._id %>">delete</a>
+    </div>
+
+    <%- include("./partials/footer.ejs") %>
+
+    <!-- When we add script tag it runs on the browser and not on the server -->
+    <script>
+      // grabs the element on line 13
+      const trashcan = document.querySelector("a.delete");
+      // event listener when someone clicks on it
+      trashcan.addEventListener("click", (e) => {
+        // anything that uses data- comes under dataset so here dataset.doc gives the value of data-doc
+        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+        // AJAX request
+        // here we get the json that was sent from the server for the delete method
+        // response.json() is an async task and calling then() on that would give us the data
+        // redirecting on the frontend using window.location.href
+        fetch(endpoint, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => (window.location.href = data.redirect))
+          .catch((err) => console.log(err));
+      });
+    </script>
+    <!-- <script>
+    const trashcan = document.querySelector('a.delete');
+    trashcan.addEventListener('click', (e) => {
+      const endpoint = `/blogs/${trashcan.dataset.doc}`;
+      fetch(endpoint, {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(data => window.location.href = data.redirect)
+      .catch(err => console.log(err));
+    });
+    
+  </script> -->
+  </body>
+</html>
